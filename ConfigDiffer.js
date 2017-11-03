@@ -26,17 +26,17 @@ class ConfigDiffer {
       // get the one with the same key from the newcfg
       return (newCfg.parsedCfgInfos.find(newEl =>
         // same key but diffrent values or commentedOut differs
-        (oldEl.key === newEl.key) && ((oldEl.value !== newEl.value) || (oldEl.commentedOut !== newEl.commentedOut))
+        (oldEl.stackKey === newEl.stackKey) && ((oldEl.value !== newEl.value) || (oldEl.commentedOut !== newEl.commentedOut))
       ))
-    }).map((el) => el.key);
+    }).map((el) => el.stackKey);
 
     let returnValue = {};
 
     // collect old and new values
     sameKeys.forEach(cfgKey => {
       returnValue[cfgKey] = {
-        oldValue: oldCfg.parsedCfgInfos.find(el => el.key === cfgKey),
-        newValue: newCfg.parsedCfgInfos.find(el => el.key === cfgKey)
+        oldValue: oldCfg.parsedCfgInfos.find(el => el.stackKey === cfgKey),
+        newValue: newCfg.parsedCfgInfos.find(el => el.stackKey === cfgKey)
       }
     });
 
@@ -70,7 +70,8 @@ class ConfigDiffer {
       }
 
       if(diff.oldValue.value === diff.newValue.value && diff.oldValue.commentedOut === diff.newValue.commentedOut) {
-        console.log(cfgKey + ' : Weired ? ');
+        console.log(cfgKey + ' ->  '+diff.oldValue.stackKey + ' -> ' + diff.newValue.stackKey+  ' : Weired this should not happen ! ');
+        process.exit(1);
       }
 
       console.log('---');

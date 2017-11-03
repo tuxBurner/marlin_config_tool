@@ -17,5 +17,5 @@ const oldCfgsDiff = cfgDiffer.notInCfg(ownCfgParser, newCfgParser);
 cfgDiffer.diffDumper('Following keys are not in the new cfg', oldCfgsDiff);
 
 // find all with diffrent values
-/*let diffrentValues = cfgDiffer.diffrentValue(ownCfgParser,newCfgParser);
-cfgDiffer.valuesDiffDumper(diffrentValues);*/
+let diffrentValues = cfgDiffer.diffrentValue(ownCfgParser,newCfgParser);
+cfgDiffer.valuesDiffDumper(diffrentValues);

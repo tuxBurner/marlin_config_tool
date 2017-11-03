@@ -8,13 +8,13 @@ class ConfigParser {
 
     // those are keys which are samples in the Configuration we have to ignore them and take only the ones which are not commented out.
     this.nodoubleCheck = [
-      'ndefCONFIGURATION_H.ENABLEDPIDTEMP.DEFAULT_Kp',
-      'ndefCONFIGURATION_H.ENABLEDPIDTEMP.DEFAULT_Ki',
-      'ndefCONFIGURATION_H.ENABLEDPIDTEMP.DEFAULT_Kd',
-      'ndefCONFIGURATION_H.ENABLEDPIDTEMPBED.DEFAULT_bedKp',
-      'ndefCONFIGURATION_H.ENABLEDPIDTEMPBED.DEFAULT_bedKi',
-      'ndefCONFIGURATION_H.ENABLEDPIDTEMPBED.DEFAULT_bedKd',
-      'ndefCONFIGURATION_H.SPI_SPEED'
+      'CONFIGURATION_H.ENABLEDPIDTEMP.DEFAULT_Kp',
+      'CONFIGURATION_H.ENABLEDPIDTEMP.DEFAULT_Ki',
+      'CONFIGURATION_H.ENABLEDPIDTEMP.DEFAULT_Kd',
+      'CONFIGURATION_H.ENABLEDPIDTEMPBED.DEFAULT_bedKp',
+      'CONFIGURATION_H.ENABLEDPIDTEMPBED.DEFAULT_bedKi',
+      'CONFIGURATION_H.ENABLEDPIDTEMPBED.DEFAULT_bedKd',
+      'CONFIGURATION_H.SPI_SPEED'
     ];
 
     const fs = require("fs");
@@ -55,6 +55,7 @@ class ConfigParser {
       // start of an if block
       if(line.startsWith('#if') || line.startsWith('#elif')) {
         let blockName = line
+          .replace('#ifndef','')
           .replace('#if', '')
           .replace('#elif', '')
           .replace(/\(/g, '')
