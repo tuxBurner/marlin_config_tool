@@ -57,20 +57,20 @@ class ConfigDiffer {
     Object.keys(valuesDiff).forEach(cfgKey => {
       let diff = valuesDiff[cfgKey];
 
-      if(diff.oldValue.value !== diff.newValue.value) {
+      if (diff.oldValue.value !== diff.newValue.value) {
         console.log(cfgKey + ' : Value changed: ' + diff.oldValue.value + ' !==  ' + diff.newValue.value);
       }
 
-      if(diff.oldValue.commentedOut === true && diff.newValue.commentedOut === false) {
+      if (diff.oldValue.commentedOut === true && diff.newValue.commentedOut === false) {
         console.log(cfgKey + ' : Commented out in yours');
       }
 
-      if(diff.oldValue.commentedOut === false && diff.newValue.commentedOut === true) {
+      if (diff.oldValue.commentedOut === false && diff.newValue.commentedOut === true) {
         console.log(cfgKey + ' : Commented out in new');
       }
 
-      if(diff.oldValue.value === diff.newValue.value && diff.oldValue.commentedOut === diff.newValue.commentedOut) {
-        console.log(cfgKey + ' ->  '+diff.oldValue.stackKey + ' -> ' + diff.newValue.stackKey+  ' : Weired this should not happen ! ');
+      if (diff.oldValue.value === diff.newValue.value && diff.oldValue.commentedOut === diff.newValue.commentedOut) {
+        console.log(cfgKey + ' ->  ' + diff.oldValue.stackKey + ' -> ' + diff.newValue.stackKey + ' : Weired this should not happen ! ');
         process.exit(1);
       }
 
@@ -88,19 +88,46 @@ class ConfigDiffer {
    * @param diffs
    */
   diffDumper(string, diffs) {
-    if(diffs.length > 0) {
+    if (diffs.length > 0) {
       console.log();
       console.log('##############################################################');
       console.log(string);
       console.log('##############################################################');
 
-      diffs.forEach(function(el) {
+      diffs.forEach(function (el) {
         console.log(el.lineNr + ': ' + el.origLine);
       });
 
       console.log('##############################################################');
       console.log();
     }
+  }
+
+  /**
+   * Generate the new marlin cfg from the diff info's
+   * @param newCfg
+   * @param diffInfos
+   * @param filename
+   */
+  generateMergedCfgFile(newCfg, diffInfos, filename) {
+    console.log('Creating new cfg file: ' + filename);
+    Object.keys(diffInfos).forEach(stackKey => {
+
+      let diff = diffInfos[stackKey];
+
+      // find the key in the new cfg for manipulating the data
+      let newCfgLineInfo = newCfg.parsedCfgInfos.find(el => el.stackKey === stackKey);
+
+      let origContent = diff.newValue.origLine;
+
+      if (diff.oldValue.commentedOut === true && diff.newValue.commentedOut === false) {
+
+        diff.newValue.origLine = '//' + diff.newValue.origLine + ' // mct was commented in yours and commented out in original';
+        console.error('Changing line from: '+origContent+'  to: ' + diff.newValue.origLine);
+      }
+
+      //console.log(newCfgLineInfo.newValue);
+    });
   }
 
 }

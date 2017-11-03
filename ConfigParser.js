@@ -48,14 +48,14 @@ class ConfigParser {
 
 
       // reached the end of an if / elif block remove it from the stack
-      if(line.startsWith('#endif') || line.startsWith('#elif')) {
+      if (line.startsWith('#endif') || line.startsWith('#elif')) {
         blockStack.pop();
       }
 
       // start of an if block
-      if(line.startsWith('#if') || line.startsWith('#elif')) {
+      if (line.startsWith('#if') || line.startsWith('#elif')) {
         let blockName = line
-          .replace('#ifndef','')
+          .replace('#ifndef', '')
           .replace('#if', '')
           .replace('#elif', '')
           .replace(/\(/g, '')
@@ -69,12 +69,12 @@ class ConfigParser {
 
 
       // only the ones with #define are interesting
-      if(line.startsWith('#define') || line.startsWith('//#define')) {
+      if (line.startsWith('#define') || line.startsWith('//#define')) {
 
         let keyValue = '';
         let commentedOut = false;
 
-        if(line.startsWith('#define')) {
+        if (line.startsWith('#define')) {
           keyValue = line.replace('#define', '').trim();
         } else {
           keyValue = line.replace('//#define', '').trim();
@@ -92,7 +92,7 @@ class ConfigParser {
 
         let firstSpacePos = keyValue.indexOf(' ');
 
-        if(firstSpacePos === -1) {
+        if (firstSpacePos === -1) {
           lineInfos.key = keyValue;
         } else {
           lineInfos.key = keyValue.substring(0, firstSpacePos);
@@ -101,7 +101,7 @@ class ConfigParser {
 
           // check if there is comment in the line
           let commentInfo = valueInfo.indexOf('//');
-          if(commentInfo !== -1) {
+          if (commentInfo !== -1) {
             valueInfo = valueInfo.substring(0, commentInfo).trim();
           }
 
@@ -111,7 +111,7 @@ class ConfigParser {
         lineInfos.stackKey = blockStack.join('.') + '.' + lineInfos.key;
 
         // check if its is one of the double entrances which are commented as sample
-        if(this.nodoubleCheck.find(el => lineInfos.stackKey === el) && lineInfos.commentedOut === true) {
+        if (this.nodoubleCheck.find(el => lineInfos.stackKey === el) && lineInfos.commentedOut === true) {
           return;
         }
 
@@ -128,7 +128,7 @@ class ConfigParser {
    */
   _validateParsedData() {
     let doubleVals = this.parsedCfgInfos.filter(el => this.parsedCfgInfos.find(el2 => (el.stackKey === el2.stackKey) && (el.lineNr !== el2.lineNr)));
-    if(doubleVals.length > 0) {
+    if (doubleVals.length > 0) {
       console.error('!!!!!!!!!!!!! Double keys in CFG found cant use it ! Stoping !!!!!!!!!!!!!');
       console.log(doubleVals.map(el => el.lineNr + ': ' + el.stackKey + ' = ' + el.value));
       process.exit(1);

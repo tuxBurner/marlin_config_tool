@@ -19,3 +19,5 @@ cfgDiffer.diffDumper('Following keys are not in the new cfg', oldCfgsDiff);
 // find all with diffrent values
 let diffrentValues = cfgDiffer.diffrentValue(ownCfgParser,newCfgParser);
 cfgDiffer.valuesDiffDumper(diffrentValues);
+
+cfgDiffer.generateMergedCfgFile(newCfgParser,diffrentValues,'Configuration_generated.h');
