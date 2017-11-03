@@ -111,23 +111,40 @@ class ConfigDiffer {
    */
   generateMergedCfgFile(newCfg, diffInfos, filename) {
     console.log('Creating new cfg file: ' + filename);
-    Object.keys(diffInfos).forEach(stackKey => {
 
-      let diff = diffInfos[stackKey];
-
-      // find the key in the new cfg for manipulating the data
-      let newCfgLineInfo = newCfg.parsedCfgInfos.find(el => el.stackKey === stackKey);
-
-      let origContent = diff.newValue.origLine;
-
-      if (diff.oldValue.commentedOut === true && diff.newValue.commentedOut === false) {
-
-        diff.newValue.origLine = '//' + diff.newValue.origLine + ' // mct was commented in yours and commented out in original';
-        console.error('Changing line from: '+origContent+'  to: ' + diff.newValue.origLine);
-      }
-
-      //console.log(newCfgLineInfo.newValue);
+    const fs = require('fs');
+    const logger = fs.createWriteStream(filename, {
+      flags: 'w' 
     });
+
+    let diffValues = Object.values(diffInfos)
+
+    // write the file
+    newCfg.fileContent.forEach((lineConent, lineNr) => {
+      // try to check if we have changes and log it
+
+      // check if we have a diff here
+      let lineDiff = diffValues.find(diff => diff.newValue.lineNr === lineNr)
+
+      if (lineDiff !== undefined) {
+        let newLineContent = '// M_C_T_Orig_Line: ' + lineConent + '\n';
+        newLineContent += (lineDiff.oldValue.commentedOut) ? '//' : '';
+        newLineContent += '#define ' + lineDiff.oldValue.key + ' ' + lineDiff.oldValue.value + ' // M_C_T_Changes: ';
+
+        if (lineDiff.oldValue.value !== lineDiff.newValue.value) {
+          newLineContent += ' Value changed (marlin: ' + lineDiff.newValue.value + ') -> (yours: ' + lineDiff.oldValue.value + ') ';
+        }
+
+        if (lineDiff.oldValue.commentedOut !== lineDiff.newValue.commentedOut) {
+          newLineContent += 'Commented out changed (marlin: ' + lineDiff.newValue.commentedOut + ') -> (yours: ' + lineDiff.oldValue.commentedOut + ')';
+        }
+
+        lineConent = newLineContent;
+      }
+      logger.write(lineConent + '\n');
+
+    });
+
   }
 
 }

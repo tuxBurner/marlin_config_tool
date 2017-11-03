@@ -86,7 +86,7 @@ class ConfigParser {
           stackKey: '',
           value: '',
           lineNr: idx,
-          origLine: keyValue,
+          origLine: line,
           commentedOut: commentedOut
         };
 
