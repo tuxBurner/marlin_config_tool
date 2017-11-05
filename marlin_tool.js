@@ -3,7 +3,7 @@ const cfgDiffer = require('./ConfigDiffer');
 
 
 
-const ownCfgParser = new ConfigParser('Configuration_seppel.h');
+const ownCfgParser = new ConfigParser('Configuration_1.1.4.h');
 
 const newCfgParser = new ConfigParser('Configuration_1.1.6.h');
 
