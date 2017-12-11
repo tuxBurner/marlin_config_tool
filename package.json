@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "run": "marlin_tool.js"
+    "start": "node marlin_tool.js"
   },
   "author": "tuxBurner",
   "license": "ISC",
